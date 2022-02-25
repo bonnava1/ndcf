@@ -1,0 +1,67 @@
+# topology documentation: http://containerlab.srlinux.dev/lab-examples/srl-ceos/
+name: dc01
+
+topology:  
+  nodes:
+    spine1:
+      kind: srl
+      type: ixr10 # See https://www.nokia.com/networks/products/7250-interconnect-router/
+      image: srlinux:21.3.2-129
+      license: license.key
+      startup-config: spine1.cfg.json
+      ports:
+        - 40001:22
+        - 57401:57400
+    spine2:
+      kind: srl
+      type: ixr10 # See https://www.nokia.com/networks/products/7250-interconnect-router/
+      image: srlinux:21.3.2-129
+      license: license.key 
+      startup-config: spine2.cfg.json
+      ports:
+        - 40002:22
+        - 57402:57400
+    leaf1:
+      kind: srl
+      type: ixr6 # See https://www.nokia.com/networks/products/7250-interconnect-router/
+      image: srlinux:21.3.2-129
+      license: license.key
+      startup-config: leaf1.cfg.json
+      ports:
+        - 40003:22
+        - 57403:57400
+    leaf2:
+      kind: srl
+      type: ixr6 # See https://www.nokia.com/networks/products/7250-interconnect-router/
+      image: srlinux:21.3.2-129
+      license: license.key 
+      startup-config: leaf2.cfg.json
+      ports:
+        - 40004:22
+        - 57404:57400
+    host10:
+      kind: linux
+      ports:
+        - 40010:22
+    host11:
+      kind: linux
+      ports:
+        - 40011:22
+    host12:
+      kind: linux
+      ports:
+        - 400012:22
+    host20:
+      kind: linux
+      ports:
+        - 40020:22
+        
+  links:
+    - endpoints: ["leaf1:e1-1", "spine1:e1-1"]
+    - endpoints: ["leaf1:e1-2", "spine2:e1-1"]
+    - endpoints: ["leaf2:e1-1", "spine1:e1-2"]
+    - endpoints: ["leaf2:e1-2", "spine2:e1-2"]
+    - endpoints: ["leaf1:e1-10", "host10:eth1"]
+    - endpoints: ["leaf1:e1-11", "host11:eth1"]
+    - endpoints: ["leaf1:e1-12", "host12:eth1"]
+    - endpoints: ["leaf2:e1-10", "host20:eth1"]
